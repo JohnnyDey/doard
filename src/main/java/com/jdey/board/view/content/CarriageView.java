@@ -2,23 +2,36 @@ package com.jdey.board.view.content;
 
 import com.jdey.board.model.Carriage;
 import com.jdey.board.model.characters.Champion;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import lombok.Getter;
 
 import java.util.List;
 
-import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.*;
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.AUTO;
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.END;
+
 
 public class CarriageView extends HorizontalLayout {
+    @Getter
+    private final Carriage carriage;
 
-    public CarriageView(Carriage carriage) {
-        this.getStyle().set("background-image", "url('img/carriage.png')");
-        this.getStyle().set("background-size", "contain");
+    public CarriageView(Carriage carriage, boolean enable, ComponentEventListener<ClickEvent<HorizontalLayout>> listener) {
+        this.carriage = carriage;
+        getStyle().set("background-image", "url('img/carriage.jpg')")
+                .set("background-size", "contain")
+                .set("background-repeat", "no-repeat");
+        if (enable) {
+            getStyle().set("border", "2px dotted DarkOrange");
+        }
 
-        setWidth("275px");
-        setHeight("130px");
+        setWidth("300px");
+        setHeight("100px");
         setChampions(carriage.getTokens(Champion.class));
         setDefaultVerticalComponentAlignment(END);
+        addClickListener(listener);
     }
 
     protected void setChampions(List<Champion> champions) {

@@ -24,7 +24,15 @@ public class Carriage implements Selectable {
         object.add(token);
     }
 
+    public void removeToken(Token token){
+        object.remove(token);
+    }
+
     public <T extends Token> List<T> getTokens(Class<T> clazz) {
         return object.stream().filter(clazz::isInstance).map(clazz::cast).toList();
+    }
+
+    public boolean isRoof() {
+        return false;
     }
 }

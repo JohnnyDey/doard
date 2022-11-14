@@ -1,5 +1,6 @@
 package com.jdey.board.model.deck;
 
+import com.google.common.collect.Lists;
 import com.jdey.board.model.Carriage;
 import com.jdey.board.model.Game;
 import com.jdey.board.model.Player;
@@ -9,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,13 +26,9 @@ public abstract class Card {
         this.owner = owner;
     }
 
-    public List<Selectable> getAvailable(Game game, Player player) {
-        return new ArrayList<>();
-    };
-    public void action(Selectable selectable){
+    public abstract List<Selectable> getAvailable(Game game, Player player);
 
-    }
-//    public abstract List<Selectable> getAvailable(Game game, Player player);
+    public abstract void action(Game game, Selectable selectable);
 
     public String getSrc() {
         if (isOpen) {
@@ -50,20 +46,43 @@ public abstract class Card {
 
     protected int getPlayerIndex(List<Carriage> carriageList, Player player) {
         Carriage carriage = getPlayerCarriage(carriageList, player);
-        return carriageList.indexOf(carriage);
+        return carriage != null ? carriageList.indexOf(carriage) : -1;
+    }
+
+    protected int getPlayerIndex(Game game, Player player) {
+        int playerIndex = getPlayerIndex(game.getTrain().getCarriageList(), player);
+        return playerIndex >= 0 ? playerIndex : getPlayerIndex(game.getTrain().getRoofsList(), player);
     }
 
     protected Carriage getPlayerCarriage(List<Carriage> carriageList, Player player) {
         return carriageList.stream()
                 .filter(c -> c.getTokens(Champion.class).contains(player.getChampion()))
                 .findFirst()
-                .get();
+                .orElse(null);
+    }
+
+    protected Carriage getPlayerCarriage(Game game, Player player) {
+        Carriage carriage = getPlayerCarriage(game.getTrain().getCarriageList(), player);
+        if (carriage == null) {
+            carriage = getPlayerCarriage(game.getTrain().getRoofsList(), player);
+        }
+        return carriage;
+    }
+
+
+    protected boolean isInRoof(Game game, Player player) {
+        return getPlayerCarriage(game.getTrain().getRoofsList(), player) != null;
     }
 
     public static final String COVER_SRC = "img/cover.jpg";
     public static final Card EMPTY_CARD = new Card() {
         @Override
         public List<Selectable> getAvailable(Game game, Player player) {
+            return Lists.newArrayList();
+        }
+
+        @Override
+        public void action(Game game, Selectable selectable) {
             throw new NotImplementedException();
         }
 

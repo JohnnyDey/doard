@@ -3,6 +3,7 @@ package com.jdey.board.model.characters;
 import com.jdey.board.model.Game;
 import com.jdey.board.model.Player;
 import com.jdey.board.model.Selectable;
+import com.jdey.board.model.tokens.PickUps;
 import com.jdey.board.model.tokens.Token;
 import com.jdey.board.model.deck.Card;
 import com.jdey.board.model.deck.Hit;
@@ -20,10 +21,9 @@ import java.util.List;
 import java.util.Random;
 
 abstract public class Champion implements Token {
-    @Getter
-    private final List<Card> hand = new ArrayList<>();
-    @Getter
-    private final List<Card> deck = new ArrayList<>();
+    @Getter private final List<Card> hand = new ArrayList<>();
+    @Getter private final List<Card> deck = new ArrayList<>();
+    @Getter private final List<PickUps> treasure = new ArrayList<>();
     private final Random rand = new Random();
     @Getter
     @Setter
@@ -64,8 +64,8 @@ abstract public class Champion implements Token {
         }
     }
 
-    public void action(Card card, Selectable selectable){
-        card.action(Selectable);
+    public void action(Game game, Card card, Selectable selectable){
+        card.action(game, selectable);
     }
 
     private Card drawRandom() {

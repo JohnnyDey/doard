@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 public class Train {
+    private final List<Carriage> roofsList = new ArrayList<>();
     private final List<Carriage> carriageList = new ArrayList<>();
 
     public Train() {
@@ -15,6 +16,7 @@ public class Train {
     }
 
     public void addCarriage() {
+        roofsList.add(new CarriageRoof());
         carriageList.add(new Carriage());
     }
 
@@ -30,6 +32,10 @@ public class Train {
                 preLast.addToken(champion);
             }
         }
+    }
+
+    public int size() {
+        return roofsList.size();
     }
 
 }

@@ -40,13 +40,20 @@ public class Game {
     public void action(Player player, Selectable selectable) {
         Card lastCard = getLastCard();
         if (isAction() && getActive() == player && lastCard.getAvailable(this, player).contains(selectable)) {
-            player.getChampion().action(lastCard, selectable);
+            player.getChampion().action(this, lastCard, selectable);
+            played.remove(lastCard);
+            changeActiveOnAction();
+            if (played.size() == 0) {
+                status = Status.PLANNING;
+            }
         }
     }
 
     public void draw(Player player) {
-        player.getChampion().draw(3);
-        nextPlayer();
+        if (isPlanning() && getActive() == player) {
+            player.getChampion().draw(3);
+            nextPlayer();
+        }
     }
 
     public void play(Player player, Card card) {
@@ -66,7 +73,12 @@ public class Game {
             status = Status.ACTION;
             played.forEach(card -> card.setOpen(true));
             Collections.reverse(played);
+            changeActiveOnAction();
         }
+    }
+
+    private void changeActiveOnAction() {
+        active = players.indexOf(getLastCard().getOwner().getPlayer());
     }
 
     public Card getLastCard() {

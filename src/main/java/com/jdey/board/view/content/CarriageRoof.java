@@ -5,10 +5,10 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-public class Locomotive extends CarriageView {
-    public Locomotive(Carriage carriage, boolean enable, ComponentEventListener<ClickEvent<HorizontalLayout>> listener) {
+public class CarriageRoof extends CarriageView{
+    public CarriageRoof(Carriage carriage, boolean enable, ComponentEventListener<ClickEvent<HorizontalLayout>> listener) {
         super(carriage, enable, listener);
-        this.getStyle().set("background-image", "url('img/locomotive.jpg')");
-        setWidth("230px");
+        this.getStyle().set("background-image", "url('img/carriage_roof.jpg')");
+        setHeight("85px");
     }
 }

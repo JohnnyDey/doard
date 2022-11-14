@@ -3,6 +3,7 @@ package com.jdey.board.view.content;
 import com.jdey.board.controller.GameRepository;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Component;
 public class TrainScroller extends Scroller {
     public static final String ID = "scroller";
 
-    @Autowired TrainView trainView;
+    @Autowired TrainCarriageView trainCarriageView;
+    @Autowired TrainRoofView trainRoofView;
 
     @Autowired
     public TrainScroller(GameRepository gameRepository) {
@@ -20,11 +22,16 @@ public class TrainScroller extends Scroller {
         setId(ID);
         setWidthFull();
         setHeight("40%");
-        getStyle().set("text-align", "center");
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        setContent(trainView);
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setWidthFull();
+        verticalLayout.add(trainRoofView);
+        verticalLayout.add(trainCarriageView);
+        verticalLayout.setSpacing(false);
+        verticalLayout.getStyle().set("align-items", "center");
+        setContent(verticalLayout);
     }
 }
