@@ -7,7 +7,6 @@ import com.jdey.board.model.Selectable;
 import com.jdey.board.model.Train;
 import com.jdey.board.model.characters.Champion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Movement extends Card {
@@ -24,12 +23,6 @@ public class Movement extends Card {
                 : getSublist(train.getCarriageList(), playerIndex, 1);
         selectables.remove(playerCarriage);
         return selectables.stream().map(Selectable.class::cast).toList();
-    }
-
-    private List<Carriage> getSublist(List<Carriage> list, int playerIndex, int delta) {
-        List<Carriage> subList = list.subList(Math.max(0, playerIndex - delta),
-                Math.min(list.size(), playerIndex + delta + 1));
-        return new ArrayList<>(subList);
     }
 
     public void action(Game game, Selectable selectable) {

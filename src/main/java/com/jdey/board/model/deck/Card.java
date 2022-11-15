@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -72,6 +73,12 @@ public abstract class Card {
 
     protected boolean isInRoof(Game game, Player player) {
         return getPlayerCarriage(game.getTrain().getRoofsList(), player) != null;
+    }
+
+    protected List<Carriage> getSublist(List<Carriage> list, int playerIndex, int delta) {
+        List<Carriage> subList = list.subList(Math.max(0, playerIndex - delta),
+                Math.min(list.size(), playerIndex + delta + 1));
+        return new ArrayList<>(subList);
     }
 
     public static final String COVER_SRC = "img/cover.jpg";

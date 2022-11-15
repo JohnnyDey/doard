@@ -1,6 +1,7 @@
 package com.jdey.board.model;
 
 import com.jdey.board.model.characters.Champion;
+import com.jdey.board.model.tokens.SheriffToken;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Train {
 
     public Train() {
         addCarriage();
+        carriageList.get(0).addToken(SheriffToken.INSTANCE);
     }
 
     public void addCarriage() {
