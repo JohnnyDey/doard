@@ -20,13 +20,13 @@ public class TrainRoofView extends TrainCarriageView {
     protected HorizontalLayout createCarriage(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new CarriageRoof(getCarriages().get(index), contains, this::select);
+        return new CarriageRoof(getCarriages().get(index), contains, this::selectCarriage, this::selectChampion);
     }
 
     @Override
     protected HorizontalLayout createLocomotive(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new LocomotiveRoof(getCarriages().get(index), contains, this::select);
+        return new LocomotiveRoof(getCarriages().get(index), contains, this::selectCarriage, this::selectChampion);
     }
 }

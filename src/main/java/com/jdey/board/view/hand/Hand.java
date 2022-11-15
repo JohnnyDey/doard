@@ -7,7 +7,6 @@ import com.jdey.board.model.Player;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -55,9 +54,9 @@ public class Hand extends HorizontalLayout implements ComponentEventListener<Pla
 
     @Override
     public void onComponentEvent(PlayCardEvent event) {
-        getUI().get().access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             removeAll();
             buildHand();
-        });
+        }));
     }
 }

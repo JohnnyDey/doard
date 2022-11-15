@@ -1,7 +1,6 @@
 package com.jdey.board.view;
 
 import com.jdey.board.controller.GameHolder;
-import com.jdey.board.event.AppEvent;
 import com.jdey.board.event.ChooseChampionEvent;
 import com.jdey.board.model.Game;
 import com.jdey.board.model.characters.Belle;
@@ -20,7 +19,6 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,8 +26,6 @@ import org.springframework.stereotype.Component;
 public class ChooseVew extends VerticalLayout implements ComponentEventListener<ChooseChampionEvent> {
 
     @Autowired private GameHolder gameHolder;
-    @Autowired private ApplicationEventPublisher applicationEventPublisher;
-
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -67,9 +63,9 @@ public class ChooseVew extends VerticalLayout implements ComponentEventListener<
 
     @Override
     public void onComponentEvent(ChooseChampionEvent event) {
-        getUI().get().access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             removeAll();
             buildButtons();
-        });
+        }));
     }
 }

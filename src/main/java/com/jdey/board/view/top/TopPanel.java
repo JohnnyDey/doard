@@ -6,7 +6,6 @@ import com.jdey.board.event.PlayCardEvent;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,10 @@ public class TopPanel extends HorizontalLayout {
     }
 
     private void rebuild() {
-        getUI().get().access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             removeAll();
             buildPanel();
-        });
+        }));
     }
 
     class PlayListener implements ComponentEventListener<PlayCardEvent> {

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +48,13 @@ public class TrainCarriageView extends HorizontalLayout implements ComponentEven
     protected HorizontalLayout createCarriage(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new CarriageView(carriage, contains, this::select);
+        return new CarriageView(carriage, contains, this::selectCarriage, this::selectChampion);
     }
 
-    protected HorizontalLayout createLocomotive(int index,  List<Selectable> availables) {
+    protected HorizontalLayout createLocomotive(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new Locomotive(carriage, contains, this::select);
+        return new Locomotive(carriage, contains, this::selectCarriage, this::selectChampion);
     }
 
     private List<Selectable> getAvailables() {
@@ -64,17 +65,23 @@ public class TrainCarriageView extends HorizontalLayout implements ComponentEven
         return Lists.newArrayList();
     }
 
-    protected void select(ClickEvent<HorizontalLayout> event) {
+    protected void selectCarriage(ClickEvent<HorizontalLayout> event) {
         Game game = gameHolder.getGame();
         game.action(game.getMe(), ((CarriageView) event.getSource()).getCarriage());
         gameHolder.publishPlayCardEvent(this);
     }
 
+    protected void selectChampion(ClickEvent<Image> event) {
+        Game game = gameHolder.getGame();
+        game.action(game.getMe(), ((PersonView) event.getSource()).getChampion());
+        gameHolder.publishPlayCardEvent(this);
+    }
+
     @Override
     public void onComponentEvent(PlayCardEvent event) {
-        getUI().get().access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             removeAll();
             buildTrain();
-        });
+        }));
     }
 }

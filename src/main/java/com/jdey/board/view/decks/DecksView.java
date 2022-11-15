@@ -2,14 +2,12 @@ package com.jdey.board.view.decks;
 
 import com.jdey.board.controller.GameHolder;
 import com.jdey.board.event.PlayCardEvent;
-import com.jdey.board.model.Game;
 import com.jdey.board.model.deck.Card;
 import com.vaadin.componentfactory.Tooltip;
 import com.vaadin.componentfactory.TooltipPosition;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -50,9 +48,9 @@ public class DecksView extends HorizontalLayout implements ComponentEventListene
 
     @Override
     public void onComponentEvent(PlayCardEvent event) {
-        getUI().get().access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             removeAll();
             buildDecks();
-        });
+        }));
     }
 }
