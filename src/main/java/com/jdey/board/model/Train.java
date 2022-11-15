@@ -1,7 +1,12 @@
 package com.jdey.board.model;
 
+import com.google.common.collect.Lists;
 import com.jdey.board.model.characters.Champion;
+import com.jdey.board.model.tokens.Case;
+import com.jdey.board.model.tokens.Gold;
+import com.jdey.board.model.tokens.Ruby;
 import com.jdey.board.model.tokens.SheriffToken;
+import com.jdey.board.model.tokens.Token;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -13,13 +18,21 @@ public class Train {
     private final List<Carriage> carriageList = new ArrayList<>();
 
     public Train() {
-        addCarriage();
+        addCarriage(Lists.newArrayList(new Case()));
         carriageList.get(0).addToken(SheriffToken.INSTANCE);
     }
 
-    public void addCarriage() {
+    private void addCarriage(List<Token> treasures) {
         roofsList.add(new CarriageRoof());
-        carriageList.add(new Carriage());
+        carriageList.add(new Carriage(treasures));
+    }
+
+    public void addCarriage() {
+        List<Token> treasures = new ArrayList<>();
+        //todo: make random
+        treasures.add(new Ruby());
+        treasures.add(new Gold(Gold.Cost._300));
+        addCarriage(treasures);
     }
 
     public void placePlayers(List<Player> players) {
