@@ -3,7 +3,7 @@ package com.jdey.board.model.tokens;
 import lombok.Getter;
 
 @Getter
-public class Gold implements PickUps {
+public class Gold extends PickUps {
     private final int cost;
 
     public Gold(Cost cost) {

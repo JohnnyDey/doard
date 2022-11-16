@@ -48,13 +48,13 @@ public class TrainCarriageView extends HorizontalLayout implements ComponentEven
     protected HorizontalLayout createCarriage(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new CarriageView(carriage, contains, this::selectCarriage, this::selectChampion);
+        return new CarriageView(carriage, contains, new ButtonClickListener(this));
     }
 
     protected HorizontalLayout createLocomotive(int index, List<Selectable> availables) {
         Carriage carriage = getCarriages().get(index);
         boolean contains = availables.contains(carriage);
-        return new Locomotive(carriage, contains, this::selectCarriage, this::selectChampion);
+        return new Locomotive(carriage, contains, new ButtonClickListener(this));
     }
 
     private List<Selectable> getAvailables() {
@@ -65,16 +65,30 @@ public class TrainCarriageView extends HorizontalLayout implements ComponentEven
         return Lists.newArrayList();
     }
 
-    protected void selectCarriage(ClickEvent<HorizontalLayout> event) {
-        Game game = gameHolder.getGame();
-        game.action(game.getMe(), ((CarriageView) event.getSource()).getCarriage());
-        gameHolder.publishPlayCardEvent(this);
-    }
+    public class ButtonClickListener {
+        private final TrainCarriageView trainCarriageView;
 
-    protected void selectChampion(ClickEvent<Image> event) {
-        Game game = gameHolder.getGame();
-        game.action(game.getMe(), ((PersonView) event.getSource()).getChampion());
-        gameHolder.publishPlayCardEvent(this);
+        public ButtonClickListener(TrainCarriageView trainCarriageView) {
+            this.trainCarriageView = trainCarriageView;
+        }
+
+        protected void selectCarriage(ClickEvent<HorizontalLayout> event) {
+            Game game = gameHolder.getGame();
+            game.action(game.getMe(), ((CarriageView) event.getSource()).getCarriage());
+            gameHolder.publishPlayCardEvent(trainCarriageView);
+        }
+
+        protected void selectChampion(ClickEvent<Image> event) {
+            Game game = gameHolder.getGame();
+            game.action(game.getMe(), ((PersonView) event.getSource()).getChampion());
+            gameHolder.publishPlayCardEvent(trainCarriageView);
+        }
+
+        protected void selectTreasure(ClickEvent<Image> event) {
+            Game game = gameHolder.getGame();
+            game.action(game.getMe(), ((TreasureView) event.getSource()).getTreasure());
+            gameHolder.publishPlayCardEvent(trainCarriageView);
+        }
     }
 
     @Override
