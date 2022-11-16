@@ -23,8 +23,7 @@ public class CarriageView extends HorizontalLayout {
 
     public CarriageView(Carriage carriage, boolean enable,
                         ComponentEventListener<ClickEvent<HorizontalLayout>> carriageClickListener,
-                        ComponentEventListener<ClickEvent<Image>> personClickListener
-    ) {
+                        ComponentEventListener<ClickEvent<Image>> personClickListener) {
         this.carriage = carriage;
         getStyle().set("background-image", "url('img/carriage.jpg')")
                 .set("background-size", "contain")

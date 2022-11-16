@@ -21,9 +21,12 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serial;
+
 @Component
 @UIScope
 public class ChooseVew extends VerticalLayout implements ComponentEventListener<ChooseChampionEvent> {
+    @Serial private static final long serialVersionUID = 3965820581499572715L;
 
     @Autowired private GameHolder gameHolder;
 

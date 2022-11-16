@@ -42,9 +42,10 @@ public class Game {
         if (isAction() && getActive() == player && lastCard.getAvailable(this, player).contains(selectable)) {
             player.getChampion().action(this, lastCard, selectable);
             played.remove(lastCard);
-            changeActiveOnAction();
             if (played.size() == 0) {
-                status = Status.PLANNING;
+                changeStatusToPlanning();
+            } else {
+                changeActiveOnAction();
             }
         }
     }
@@ -61,6 +62,9 @@ public class Game {
             player.getChampion().play(card, this);
             played.add(card);
             nextPlayer();
+            if (turn > turns) {
+                changeStatusToAction();
+            }
         }
     }
 
@@ -69,12 +73,26 @@ public class Game {
             active = 0;
             turn++;
         }
-        if (turn > turns) {
-            status = Status.ACTION;
-            played.forEach(card -> card.setOpen(true));
-            Collections.reverse(played);
-            changeActiveOnAction();
-        }
+    }
+
+    private void changeStatusToAction() {
+        turn = 1;
+        status = Status.ACTION;
+        played.forEach(card -> card.setOpen(true));
+        Collections.reverse(played);
+        changeActiveOnAction();
+    }
+
+    private void changeStatusToPlanning() {
+        status = Status.PLANNING;
+        played.forEach(card -> card.getOwner().getDeck().add(card));
+        played.clear();
+        players.forEach(player -> {
+            Champion champion = player.getChampion();
+            champion.getDeck().addAll(champion.getHand());
+            champion.getHand().clear();
+            champion.initDraw();
+        });
     }
 
     private void changeActiveOnAction() {
