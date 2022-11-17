@@ -20,8 +20,7 @@ public class Game {
     private final String id = UUID.randomUUID().toString();
     private Status status = Status.NEW;
     private int active = 0;
-    private int turn = 1;
-    private int turns = 2;
+    private List<Round> rounds = new ArrayList<>();
 
     public void joinAs(Class<? extends Champion> championClass) {
         try {
@@ -35,7 +34,6 @@ public class Game {
             throw new RuntimeException(e);
         }
     }
-
 
     public void action(Player player, Selectable selectable) {
         Card lastCard = getLastCard();
@@ -59,24 +57,26 @@ public class Game {
 
     public void play(Player player, Card card) {
         if (isPlanning() && getActive() == player) {
-            player.getChampion().play(card, this);
+            Round round = rounds.get(0);
+            if (round.isBlind()) {
+                player.getChampion().play(card, this);
+            }
             played.add(card);
             nextPlayer();
-            if (turn > turns) {
+            if (round.isEmpty()) {
                 changeStatusToAction();
             }
         }
     }
 
     private void nextPlayer() {
-        if (++active >= players.size()) {
+        if (rounds.get(0).mayBeNextPlayer(getActive()) && ++active >= players.size()) {
             active = 0;
-            turn++;
+            rounds.get(0).nextTurn();
         }
     }
 
     private void changeStatusToAction() {
-        turn = 1;
         status = Status.ACTION;
         played.forEach(card -> card.setOpen(true));
         Collections.reverse(played);
@@ -84,15 +84,18 @@ public class Game {
     }
 
     private void changeStatusToPlanning() {
-        status = Status.PLANNING;
-        played.forEach(card -> card.getOwner().getDeck().add(card));
-        played.clear();
-        players.forEach(player -> {
-            Champion champion = player.getChampion();
-            champion.getDeck().addAll(champion.getHand());
-            champion.getHand().clear();
-            champion.initDraw();
-        });
+        if (rounds.size() > 0) {
+            status = Status.PLANNING;
+            played.forEach(card -> card.getOwner().getDeck().add(card));
+            played.clear();
+            players.forEach(player -> {
+                Champion champion = player.getChampion();
+                champion.getDeck().addAll(champion.getHand());
+                champion.getHand().clear();
+                champion.initDraw();
+            });
+            rounds.remove(0);
+        }
     }
 
     private void changeActiveOnAction() {
@@ -107,6 +110,9 @@ public class Game {
     }
 
     public Player getActive() {
+        if (!rounds.isEmpty() && rounds.get(0).isBackward() && rounds.get(0).getTurn() > 0) {
+            return players.get(players.size() - 1 - active);
+        }
         return players.get(active);
     }
 
@@ -132,6 +138,7 @@ public class Game {
     public void start() {
         status = Status.PLANNING;
         players.stream().map(Player::getChampion).forEach(Champion::initDraw);
+        rounds = players.size() > 4 ? Rounds.getBigDeck() : Rounds.getSmallDeck();
     }
 
     private enum Status {

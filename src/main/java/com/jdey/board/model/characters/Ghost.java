@@ -7,7 +7,7 @@ public class Ghost extends Champion{
 
     @Override
     public void play(Card card, Game game) {
-        if(game.getTurn() == 1) {
+        if(game.getRounds().get(0).getTurn() == 1) {
             card.setOpen(false);
         }
         super.play(card, game);
